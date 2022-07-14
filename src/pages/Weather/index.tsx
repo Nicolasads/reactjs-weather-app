@@ -92,28 +92,27 @@ export default function Weather() {
   };
 
   useEffect(() => {
-    const fetchWeather = () => {
-      api
-        .get(
+    const fetchWeather = async () => {
+      try {
+        const response: any = await api.get(
           `weather?q=${city}&appid=${process.env.REACT_APP_API_KEY}&exclude=minutely&units=metric`
-        )
-        .then((e) => {
-          // console.log(e.data);
-          setDate(e.data);
-          setWeather(e.data?.weather[0]?.main);
-          setTemperature(e.data?.main?.temp);
+        );
 
-          console.log(e.data);
-          api
-            .get(
-              `onecall?lat=${e.data.coord.lat}&lon=${e.data.coord.lon}&exclude=current&appid=${process.env.REACT_APP_API_KEY}&units=metric`
-            )
-            .then(async (e) => {
-              setForecast(e.data.hourly);
-            });
-        })
+        console.log("data", response);
 
-        .catch((e) => console.log(e.data));
+        setDate(response.data);
+
+        setWeather(response.data.weather[0].main);
+        setTemperature(response.data.main.temp);
+
+        const forecastResponse: any = await api.get(
+          `onecall?lat=${response.data.coord.lat}&lon=${response.data.coord.lon}&exclude=current&appid=${process.env.REACT_APP_API_KEY}&units=metric`
+        );
+
+        setForecast(forecastResponse.data.hourly);
+      } catch (err: any) {
+        console.log(err.data);
+      }
     };
 
     fetchWeather();
@@ -151,7 +150,6 @@ export default function Weather() {
 
           <WeatherInfo>
             <CityName>{city?.toUpperCase()}</CityName>
-
             <CityStatus>{weather}</CityStatus>
 
             <TemperatureInfo>
@@ -197,7 +195,6 @@ export default function Weather() {
             <AtmosphereDiv>
               <Divider>
                 <AtmosphereInfo>wind speed</AtmosphereInfo>
-
                 <AtmosphereValue>{date?.wind?.speed} m/s</AtmosphereValue>
               </Divider>
 
@@ -205,7 +202,6 @@ export default function Weather() {
 
               <Divider>
                 <AtmosphereInfo>sunrise</AtmosphereInfo>
-
                 <AtmosphereValue>
                   {moment(new Date(date?.sys?.sunrise * 1000)).format("LT")}
                 </AtmosphereValue>
@@ -215,7 +211,6 @@ export default function Weather() {
 
               <Divider>
                 <AtmosphereInfo>sunset</AtmosphereInfo>
-
                 <AtmosphereValue>
                   {moment(new Date(date?.sys?.sunset * 1000)).format("LT")}
                 </AtmosphereValue>
@@ -225,7 +220,6 @@ export default function Weather() {
 
               <Divider>
                 <AtmosphereInfo>humidity</AtmosphereInfo>
-
                 <AtmosphereValue>
                   {parseInt(date?.main?.humidity)}%
                 </AtmosphereValue>
