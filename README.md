@@ -25,6 +25,9 @@ Após isso, digite
 ```bash
 npm run start
 ```
+
+ou
+
 ```bash
 yarn start
 ```
