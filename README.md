@@ -20,6 +20,16 @@ ou se preferir, utilize o
 yarn install
 ```
 
+Após isso, digite
+
+```bash
+npm run start
+```
+```bash
+yarn start
+```
+
+
 # Bibliotecas utilizadas
 
 - Typescript (Linguagem)
